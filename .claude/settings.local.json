@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"$USERPROFILE/.streamlit\")",
+      "Bash(\"$USERPROFILE/.streamlit/credentials.toml\":*)"
+    ]
+  }
+}

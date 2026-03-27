@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────
+# Air Quality LATAM — Dependencias
+# Universidad Anáhuac Cancún | Ingeniería Ambiental
+# ─────────────────────────────────────────────
+
+# Núcleo científico
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# Geoespacial
+geopandas>=0.13.0
+shapely>=2.0.0
+pyproj>=3.5.0
+fiona>=1.9.0
+
+# Visualización
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
+folium>=0.14.0
+contextily>=1.3.0
+
+# Series de tiempo y estadística
+statsmodels>=0.14.0
+scikit-learn>=1.3.0
+
+# Datos satelitales y raster
+xarray>=2023.1.0
+netCDF4>=1.6.0
+requests>=2.28.0
+
+# API y datos externos
+# cdsapi>=0.6.1              # Copernicus ADS (descomentar cuando se tenga cuenta)
+# pykrige>=1.7.0             # Kriging (descomentar si se necesita)
+# ruptures>=1.1.7            # Detección de cambios estructurales
+# esda>=2.4.0                # Análisis espacial exploratorio (Moran)
+# libpysal>=4.7.0            # Pesos espaciales
+
+# Reportes
+reportlab>=4.0.0
+jinja2>=3.1.0
+
+# Dashboard
+streamlit>=1.28.0
+streamlit-folium>=0.15.0
+
+# Notebooks
+jupyter>=1.0.0
+ipykernel>=6.25.0
+nbformat>=5.9.0
+
+# Utilitarios
+python-dotenv>=1.0.0
+tqdm>=4.65.0
