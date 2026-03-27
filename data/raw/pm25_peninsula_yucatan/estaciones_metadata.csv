@@ -1,0 +1,11 @@
+station_id,nombre,lat,lon,estado,municipio,archivo_csv,fuente,notas
+BAC,Bacalar,18.676619,-88.398692,Quintana Roo,Bacalar,PM2_5_Bacalar.csv,PurpleAir/SEMA,Ayuntamiento Bacalar; datos oct-2020 → sep-2025; CSV con fecha sin hora (DD/MM/YYYY)
+BCUN,Bomberos Cancún,21.169408,-86.826900,Quintana Roo,Benito Juárez,PM2_5_Bomberos_Cancún.csv,PurpleAir/SEMA,Estación bomberos Cancún; mar-2021 → may-2023
+C_A,Chetumal Aeropuerto,18.500000,-88.326700,Quintana Roo,Othón P. Blanco,PM2_5_Chetumal_Aeropuerto.csv,PurpleAir/SEMA,IESCDA zona aeropuerto Chetumal; oct-2020 → oct-2025
+C_N,Chetumal Norte,18.520000,-88.310000,Quintana Roo,Othón P. Blanco,PM2_5_Chetumal_Norte.csv,PurpleAir/SEMA,Sensor norte de Chetumal; oct-2020 → feb-2024
+C_Z,Chetumal Zoo,18.503619,-88.309800,Quintana Roo,Othón P. Blanco,PM2_5_Chetumal_Zoo.csv,PurpleAir/SEMA,Zona zoológico Chetumal; oct-2020 → oct-2025
+COZ,Cozumel,20.493736,-86.930764,Quintana Roo,Cozumel,PM2_5_Cozu.csv,PurpleAir/SEMA,Isla Cozumel; ene-2022 → abr-2025
+PL,Playa del Carmen,20.628189,-87.075578,Quintana Roo,Solidaridad,PM2_5_Playa1.csv,PurpleAir/SEMA,SEMA Solidaridad/Playa del Carmen; mar-2021 → feb-2023
+PM,Puerto Morelos,20.854758,-86.901128,Quintana Roo,Benito Juárez,PM2_5_Puerto_Morelos.csv,PurpleAir/SEMA,Puerto Morelos; mar-2021 → jun-2024
+TUL,Tulum,20.202025,-87.460050,Quintana Roo,Tulum,PM2_5_Tulum.csv,PurpleAir/SEMA,Tulum; nov-dic 2022; cobertura muy limitada (~620 registros)
+UAC,UAC Cancún,21.062056,-86.845131,Quintana Roo,Benito Juárez,PM2_5_UAC.csv,PurpleAir/SEMA,Universidad Anáhuac Cancún; sensor institucional real; mar-2022 → dic-2023

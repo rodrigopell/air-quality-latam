@@ -62,24 +62,39 @@ PPB_TO_UGM3 = {
 # ─────────────────────────────────────────────
 # REGIONES DE INTERÉS (bounding boxes: [lon_min, lat_min, lon_max, lat_max])
 # ─────────────────────────────────────────────
+# Cobertura de datos:
+#   Peninsula_Yucatan → datos REALES (PurpleAir/SEMA + ERA5, 2020-2026)
+#   Guatemala         → región de EXPANSIÓN (datos sintéticos por ahora)
+#   LATAM             → contexto regional amplio
 REGIONS = {
+    "Peninsula_Yucatan": {
+        "bbox": [-90.5, 17.8, -86.5, 21.7],
+        "country_code": "MX",
+        "crs": "EPSG:4326",
+        "descripcion": "Península de Yucatán (Yucatán, Campeche, Quintana Roo)",
+        "estados": ["Yucatán", "Campeche", "Quintana Roo"],
+        "datos_reales": True,
+    },
+    "Quintana_Roo": {
+        "bbox": [-88.0, 17.9, -86.5, 21.7],
+        "country_code": "MX",
+        "crs": "EPSG:4326",
+        "descripcion": "Estado de Quintana Roo, México (subregión con sensores PM2.5)",
+        "datos_reales": True,
+    },
     "Guatemala": {
         "bbox": [-92.2, 13.7, -88.2, 17.8],
         "country_code": "GT",
         "crs": "EPSG:4326",
-        "descripcion": "República de Guatemala",
-    },
-    "Quintana_Roo": {
-        "bbox": [-88.0, 18.0, -86.7, 21.6],
-        "country_code": "MX",
-        "crs": "EPSG:4326",
-        "descripcion": "Estado de Quintana Roo, México",
+        "descripcion": "República de Guatemala (región de expansión — datos sintéticos)",
+        "datos_reales": False,
     },
     "LATAM": {
         "bbox": [-120.0, -56.0, -34.0, 32.0],
         "country_code": None,
         "crs": "EPSG:4326",
         "descripcion": "América Latina y el Caribe",
+        "datos_reales": False,
     },
 }
 
@@ -150,9 +165,10 @@ COPERNICUS_KEY   = os.getenv("COPERNICUS_API_KEY", "")
 # ─────────────────────────────────────────────
 # SISTEMA DE REFERENCIA COORDENADAS
 # ─────────────────────────────────────────────
-DEFAULT_CRS = "EPSG:4326"   # WGS84 geográfico
-PROJECTED_CRS_GT = "EPSG:32615"  # UTM Zona 15N (Guatemala)
-PROJECTED_CRS_MX = "EPSG:32614"  # UTM Zona 14N (Quintana Roo)
+DEFAULT_CRS = "EPSG:4326"        # WGS84 geográfico
+PROJECTED_CRS_YUC = "EPSG:32616" # UTM Zona 16N (Península de Yucatán)
+PROJECTED_CRS_GT  = "EPSG:32615" # UTM Zona 15N (Guatemala)
+PROJECTED_CRS_MX  = "EPSG:32614" # UTM Zona 14N (Quintana Roo oeste)
 
 # ─────────────────────────────────────────────
 # PARÁMETROS DE ANÁLISIS
@@ -160,6 +176,72 @@ PROJECTED_CRS_MX = "EPSG:32614"  # UTM Zona 14N (Quintana Roo)
 DEFAULT_RESOLUTION_DEG = 0.1   # resolución de grid IDW en grados
 INTERPOLATION_POWER    = 2      # potencia para IDW
 MAX_GAP_HOURS          = 6      # máximo gap para interpolación temporal
+
+# ─────────────────────────────────────────────
+# DATOS LOCALES — ERA5 Y PM2.5 (Quintana Roo)
+# ─────────────────────────────────────────────
+# Carpeta raíz donde están los archivos ERA5 descargados.
+# Sobreescribir con variable de entorno ERA5_DATA_DIR si la ruta es diferente.
+_era5_default = Path(os.getenv(
+    "ERA5_DATA_DIR",
+    r"C:\Users\rodri\Downloads\Microsoft_Practicum_I\Practicum II\ERA_5\Datos_entrada"
+))
+ERA5_LOCAL_DIR = _era5_default
+
+# Sub-carpetas esperadas dentro de ERA5_LOCAL_DIR:
+#   ERA_5_viento/   → era_5_v_YYYY.nc  (u10, v10  [m/s])
+#   Era_5_precipitacion/ → era_5_p_YYYY.nc  (tp  [m])
+#   Era_5_temperatura/   → era_5_t_YYYY.nc  (t2m [K])
+ERA5_SUBDIRS = {
+    "viento":       ERA5_LOCAL_DIR / "ERA_5_viento",
+    "precipitacion": ERA5_LOCAL_DIR / "Era_5_precipitacion",
+    "temperatura":  ERA5_LOCAL_DIR / "Era_5_temperatura",
+}
+
+# Serie larga (1996-2026) en carpetas hermanas ERA_5_V / ERA_5_P / ERA_5_T
+_era5_long = Path(os.getenv(
+    "ERA5_LONG_DIR",
+    r"C:\Users\rodri\Downloads\Microsoft_Practicum_I\Practicum II\ERA_5"
+))
+ERA5_LONG_DIRS = {
+    "viento":        _era5_long / "ERA_5_V",
+    "precipitacion": _era5_long / "ERA_5_P",
+    "temperatura":   _era5_long / "ERA_5_T",
+}
+
+# PM2.5 PurpleAir / SEMA — copiados a data/raw/pm25_peninsula_yucatan/
+# (directorio renombrado de pm25_quintana_roo → pm25_peninsula_yucatan)
+PM25_SEMA_DIR = RAW_DIR / "pm25_peninsula_yucatan"
+
+# Registro de estaciones PurpleAir — Península de Yucatán (Quintana Roo)
+# UAC incluida: sensor real de la Universidad Anáhuac Cancún, datos limitados
+# pero relevante como referencia local institucional.
+STATIONS_QR = {
+    "BAC":  {"nombre": "Bacalar",              "lat": 18.676619, "lon": -88.398692, "municipio": "Bacalar"},
+    "BCUN": {"nombre": "Bomberos Cancún",      "lat": 21.169408, "lon": -86.826900, "municipio": "Benito Juárez"},
+    "C_A":  {"nombre": "Chetumal Aeropuerto",  "lat": 18.500000, "lon": -88.326700, "municipio": "Othón P. Blanco"},
+    "C_N":  {"nombre": "Chetumal Norte",       "lat": 18.520000, "lon": -88.310000, "municipio": "Othón P. Blanco"},
+    "C_Z":  {"nombre": "Chetumal Zoo",         "lat": 18.503619, "lon": -88.309800, "municipio": "Othón P. Blanco"},
+    "COZ":  {"nombre": "Cozumel",              "lat": 20.493736, "lon": -86.930764, "municipio": "Cozumel"},
+    "PL":   {"nombre": "Playa del Carmen",     "lat": 20.628189, "lon": -87.075578, "municipio": "Solidaridad"},
+    "PM":   {"nombre": "Puerto Morelos",       "lat": 20.854758, "lon": -86.901128, "municipio": "Benito Juárez"},
+    "TUL":  {"nombre": "Tulum",                "lat": 20.202025, "lon": -87.460050, "municipio": "Tulum"},
+    "UAC":  {"nombre": "UAC Cancún",           "lat": 21.062056, "lon": -86.845131, "municipio": "Benito Juárez"},
+}
+
+# Mapeo filename → station_id
+PM25_FILE_STATION_MAP = {
+    "PM2_5_Bacalar.csv":             "BAC",
+    "PM2_5_Bomberos_Cancún.csv":     "BCUN",
+    "PM2_5_Chetumal_Aeropuerto.csv": "C_A",
+    "PM2_5_Chetumal_Norte.csv":      "C_N",
+    "PM2_5_Chetumal_Zoo.csv":        "C_Z",
+    "PM2_5_Cozu.csv":                "COZ",
+    "PM2_5_Playa1.csv":              "PL",
+    "PM2_5_Puerto_Morelos.csv":      "PM",
+    "PM2_5_Tulum.csv":               "TUL",
+    "PM2_5_UAC.csv":                 "UAC",
+}
 
 # ─────────────────────────────────────────────
 # FUENTES DE DATOS
